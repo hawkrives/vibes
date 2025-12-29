@@ -34,6 +34,9 @@ jobs:
 
       - name: Discover and build subfolders
         run: |
+          # Ensure jq is installed for URL encoding
+          sudo apt-get update -qq && sudo apt-get install -y jq
+
           mkdir -p _site
 
           # Find all subdirectories (excluding common ones)
@@ -126,7 +129,8 @@ jobs:
             if [ -d "$dir" ]; then
               project=${dir#_site/}
               project=${project%/}
-              echo "    <li><a href=\"/$project/\">$project</a></li>" >> _site/index.html
+              encoded_project=$(echo -n "$project" | jq -rR '@uri')
+              echo "    <li><a href=\"/$encoded_project/\">$project</a></li>" >> _site/index.html
             fi
           done
 
