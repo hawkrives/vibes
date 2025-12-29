@@ -1,2 +1,3 @@
 packages:
   - 'kdl'
+  - 'gitlab-ci-component'
