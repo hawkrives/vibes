@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { playwright } from '@vitest/browser-playwright';
 
 export default defineConfig({
   base: './',
@@ -11,12 +12,20 @@ export default defineConfig({
     open: true,
   },
   test: {
+    // Use happy-dom for DOM environment in unit tests
+    environment: 'happy-dom',
+    // Browser mode configuration for when needed
+    // Use --browser flag to enable: pnpm test --browser
     browser: {
-      enabled: true,
-      name: 'playwright',
-      provider: 'playwright',
-      headless: true,
-      screenshotOnFailure: true,
+      enabled: false,
+      provider: playwright(),
+      instances: [
+        {
+          browser: 'chromium',
+          headless: true,
+          screenshotOnFailure: true,
+        },
+      ],
     },
     include: ['**/*.test.js'],
   },
