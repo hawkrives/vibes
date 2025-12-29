@@ -16,7 +16,23 @@ A mobile-friendly, interactive KDL (KDL Document Language) REPL built with vanil
 
 - Node.js 18+ and pnpm
 
+**OR**
+
+- [Nix](https://nixos.org/) with flakes enabled
+
 ### Setup
+
+#### Using Nix (Recommended)
+
+```bash
+# Enter the development environment
+nix develop
+
+# Or use direnv for automatic environment loading
+direnv allow
+```
+
+#### Using Node.js directly
 
 ```bash
 # Install dependencies
