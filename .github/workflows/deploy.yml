@@ -34,9 +34,6 @@ jobs:
 
       - name: Discover and build subfolders
         run: |
-          # Ensure jq is installed for URL encoding
-          sudo apt-get update -qq && sudo apt-get install -y jq
-
           mkdir -p _site
 
           # Find all subdirectories (excluding common ones)
