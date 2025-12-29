@@ -1,0 +1,160 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Discover and build subfolders
+        run: |
+          set -e
+          mkdir -p _site
+          touch _site/.nojekyll
+
+          # Find all subdirectories (excluding common ones)
+          for dir in */; do
+            # Remove trailing slash
+            dir=${dir%/}
+
+            # Skip certain directories
+            if [[ "$dir" == "node_modules" ]] || \
+               [[ "$dir" == "dist" ]] || \
+               [[ "$dir" == "_site" ]] || \
+               [[ "$dir" == "tests" ]] || \
+               [[ "$dir" == ".git" ]] || \
+               [[ "$dir" == ".github" ]]; then
+              echo "Skipping $dir"
+              continue
+            fi
+
+            echo "Processing $dir..."
+
+            # Check if directory has a package.json
+            if [ -f "$dir/package.json" ]; then
+              echo "Building $dir (has package.json)..."
+
+              # Install dependencies and build
+              cd "$dir"
+              pnpm install
+              pnpm build
+
+              # Find the build output directory (common names: dist, build, out)
+              if [ -d "dist" ]; then
+                BUILD_DIR="dist"
+              elif [ -d "build" ]; then
+                BUILD_DIR="build"
+              elif [ -d "out" ]; then
+                BUILD_DIR="out"
+              else
+                echo "Warning: Could not find build output directory for $dir"
+                cd ..
+                continue
+              fi
+
+              # Copy build output to _site
+              echo "Copying $BUILD_DIR to _site/$dir"
+              mkdir -p "../_site/$dir"
+              cp -r "$BUILD_DIR/"* "../_site/$dir/"
+
+              cd ..
+            else
+              echo "Skipping $dir (no package.json found)"
+            fi
+          done
+
+          # Create an index page listing all projects
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Vibes - Experimental Projects</title>
+            <style>
+              body {
+                font-family: system-ui, -apple-system, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem;
+                line-height: 1.6;
+              }
+              h1 { color: #333; }
+              ul { list-style: none; padding: 0; }
+              li { margin: 1rem 0; }
+              a {
+                color: #0066cc;
+                text-decoration: none;
+                font-size: 1.2rem;
+              }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <h1>Vibes</h1>
+            <p>A collection of experimental projects and tools.</p>
+            <h2>Projects</h2>
+            <ul>
+          EOF
+
+          # Add links for each project
+          for dir in _site/*/; do
+            if [ -d "$dir" ]; then
+              project=${dir#_site/}
+              project=${project%/}
+              encoded_project=$(echo -n "$project" | jq -rR '@uri')
+              escaped_project=$(echo -n "$project" | jq -rR '@html')
+              echo "    <li><a href=\"./$encoded_project/\">$escaped_project</a></li>" >> _site/index.html
+            fi
+          done
+
+          cat >> _site/index.html << 'EOF'
+            </ul>
+          </body>
+          </html>
+          EOF
+
+          echo "Build complete! Projects in _site:"
+          ls -la _site/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
