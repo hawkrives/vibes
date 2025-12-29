@@ -127,7 +127,8 @@ jobs:
               project=${dir#_site/}
               project=${project%/}
               encoded_project=$(echo -n "$project" | jq -rR '@uri')
-              echo "    <li><a href=\"/$encoded_project/\">$project</a></li>" >> _site/index.html
+              escaped_project=$(echo -n "$project" | jq -rR '@html')
+              echo "    <li><a href=\"/$encoded_project/\">$escaped_project</a></li>" >> _site/index.html
             fi
           done
 
