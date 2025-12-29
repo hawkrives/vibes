@@ -1,7 +1,7 @@
 {
   "name": "vibes",
   "version": "1.0.0",
-  "description": "KDL REPL and related projects",
+  "description": "KDL REPL, GitLab CI/CD component docs, and related projects",
   "private": true,
   "type": "module",
   "scripts": {},

@@ -17,6 +17,20 @@ A mobile-friendly, interactive KDL (KDL Document Language) REPL built with vanil
 
 See the [KDL REPL README](./kdl/README.md) for more details.
 
+### [GitLab CI/CD Component Documentation](./gitlab-ci-component)
+
+Comprehensive documentation for GitLab CI/CD components, structured using the Diátaxis framework.
+
+**Features:**
+- 📚 Tutorials - Learning-oriented lessons
+- 🛠️ How-to Guides - Practical, task-oriented guides
+- 📖 Reference - Technical specifications
+- 💡 Explanation - Understanding-oriented discussions
+- Built with VitePress
+- Full navigation and search
+
+See the [GitLab CI/CD Component README](./gitlab-ci-component/README.md) for more details.
+
 ## Development
 
 ### Prerequisites
@@ -31,7 +45,10 @@ See the [KDL REPL README](./kdl/README.md) for more details.
 pnpm install
 
 # Start development server (for KDL REPL)
-pnpm dev
+cd kdl && pnpm dev
+
+# Start documentation site (for GitLab CI/CD Component docs)
+cd gitlab-ci-component && pnpm docs:dev
 
 # Build all projects
 pnpm build
