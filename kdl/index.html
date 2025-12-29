@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDL REPL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>KDL REPL</h1>
+            <p class="subtitle">Interactive KDL Document Language Playground</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <label for="kdl-input">
+                    <strong>KDL Input</strong>
+                </label>
+                <textarea
+                    id="kdl-input"
+                    placeholder="Enter KDL document here...
+Example:
+node &quot;value&quot; {
+    child &quot;nested&quot;
+}"></textarea>
+            </section>
+
+            <section class="output-section">
+                <div class="output-header">
+                    <label><strong>Output</strong></label>
+                    <select id="view-selector">
+                        <option value="ast">Interactive AST</option>
+                        <option value="json">JSON Representation</option>
+                    </select>
+                </div>
+
+                <div id="error-message" class="error hidden"></div>
+
+                <div id="ast-view" class="output-view">
+                    <div id="ast-content" class="ast-tree"></div>
+                </div>
+
+                <div id="json-view" class="output-view hidden">
+                    <pre id="json-content"></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
