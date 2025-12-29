@@ -48,13 +48,13 @@ This documentation site provides complete guidance for creating, using, and unde
 npm install
 
 # Start development server
-npm run docs:dev
+npm run dev
 
 # Build for production
 npm run build
 
 # Preview production build
-npm run docs:preview
+npm run preview
 ```
 
 The documentation will be available at `http://localhost:5173/gitlab-ci-component/`
