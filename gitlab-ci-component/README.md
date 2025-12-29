@@ -51,7 +51,7 @@ npm install
 npm run docs:dev
 
 # Build for production
-npm run docs:build
+npm run build
 
 # Preview production build
 npm run docs:preview
