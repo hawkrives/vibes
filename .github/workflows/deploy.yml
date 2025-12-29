@@ -34,7 +34,9 @@ jobs:
 
       - name: Discover and build subfolders
         run: |
+          set -e
           mkdir -p _site
+          touch _site/.nojekyll
 
           # Find all subdirectories (excluding common ones)
           for dir in */; do
@@ -79,7 +81,7 @@ jobs:
               # Copy build output to _site
               echo "Copying $BUILD_DIR to _site/$dir"
               mkdir -p "../_site/$dir"
-              cp -r "$BUILD_DIR"/* "../_site/$dir/"
+              cp -r "$BUILD_DIR/"* "../_site/$dir/"
 
               cd ..
             else
@@ -128,7 +130,7 @@ jobs:
               project=${project%/}
               encoded_project=$(echo -n "$project" | jq -rR '@uri')
               escaped_project=$(echo -n "$project" | jq -rR '@html')
-              echo "    <li><a href=\"/$encoded_project/\">$escaped_project</a></li>" >> _site/index.html
+              echo "    <li><a href=\"./$encoded_project/\">$escaped_project</a></li>" >> _site/index.html
             fi
           done
 
