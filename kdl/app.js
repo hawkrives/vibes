@@ -1,5 +1,6 @@
-// Import KDL library from CDN
-import { parse } from 'https://esm.sh/@bgotink/kdl@0.6.0';
+// Import KDL library
+import { parse } from '@bgotink/kdl';
+import { formatValue, escapeHtml, documentToJSON, nodeToJSON } from './utils.js';
 
 // DOM elements
 const kdlInput = document.getElementById('kdl-input');
@@ -167,30 +168,6 @@ function toggleNode(nodeId) {
     renderAST();
 }
 
-// Format a value for display
-function formatValue(value) {
-    if (value === null || value === undefined) {
-        return 'null';
-    }
-
-    if (typeof value === 'string') {
-        return `"${escapeHtml(value)}"`;
-    }
-
-    if (typeof value === 'number' || typeof value === 'boolean') {
-        return escapeHtml(String(value));
-    }
-
-    return escapeHtml(JSON.stringify(value));
-}
-
-// Escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
 // Render JSON representation
 function renderJSON() {
     if (!currentDocument) {
@@ -201,49 +178,6 @@ function renderJSON() {
     // Convert document to plain object for JSON serialization
     const jsonData = documentToJSON(currentDocument);
     jsonContent.textContent = JSON.stringify(jsonData, null, 2);
-}
-
-// Convert document/node to plain JSON
-function documentToJSON(doc) {
-    if (!doc || !doc.nodes) {
-        return { nodes: [] };
-    }
-
-    return {
-        nodes: doc.nodes.map(nodeToJSON)
-    };
-}
-
-function nodeToJSON(node) {
-    const result = {
-        name: node.name
-    };
-
-    if (node.entries && node.entries.length > 0) {
-        const args = [];
-        const props = {};
-
-        node.entries.forEach(entry => {
-            if (entry.name) {
-                props[entry.name] = entry.value;
-            } else {
-                args.push(entry.value);
-            }
-        });
-
-        if (args.length > 0) {
-            result.arguments = args;
-        }
-        if (Object.keys(props).length > 0) {
-            result.properties = props;
-        }
-    }
-
-    if (node.children && node.children.nodes && node.children.nodes.length > 0) {
-        result.children = node.children.nodes.map(nodeToJSON);
-    }
-
-    return result;
 }
 
 // Handle view switching
