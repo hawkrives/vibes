@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { playwright } from '@vitest/browser/providers/playwright';
 
 export default defineConfig({
   base: './',
@@ -13,8 +14,8 @@ export default defineConfig({
   test: {
     browser: {
       enabled: true,
-      name: 'playwright',
-      provider: 'playwright',
+      name: 'chromium',
+      provider: playwright(),
       headless: true,
       screenshotOnFailure: true,
     },
