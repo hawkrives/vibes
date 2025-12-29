@@ -32,6 +32,9 @@ jobs:
         with:
           version: 10
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Discover and build subfolders
         run: |
           set -e
@@ -60,9 +63,8 @@ jobs:
             if [ -f "$dir/package.json" ]; then
               echo "Building $dir (has package.json)..."
 
-              # Install dependencies and build
+              # Build the project
               cd "$dir"
-              pnpm install
               pnpm build
 
               # Find the build output directory (common names: dist, build, out)
