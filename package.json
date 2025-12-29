@@ -4,10 +4,7 @@
   "description": "KDL REPL and related projects",
   "private": true,
   "type": "module",
-  "scripts": {
-    "test:e2e": "playwright test",
-    "test:all": "pnpm --filter @vibes/kdl test && pnpm test:e2e"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "http://local_proxy@127.0.0.1:56471/git/hawkrives/vibes"

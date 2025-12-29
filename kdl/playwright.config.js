@@ -29,7 +29,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm --filter @vibes/kdl dev',
+    command: 'pnpm dev',
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
