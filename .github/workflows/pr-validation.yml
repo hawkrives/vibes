@@ -1,0 +1,83 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and test all projects
+        run: |
+          set -e
+
+          # Find all subdirectories with package.json (excluding common ones)
+          for dir in */; do
+            # Remove trailing slash
+            dir=${dir%/}
+
+            # Skip certain directories
+            if [[ "$dir" == "node_modules" ]] || \
+               [[ "$dir" == "dist" ]] || \
+               [[ "$dir" == "_site" ]] || \
+               [[ "$dir" == "tests" ]] || \
+               [[ "$dir" == ".git" ]] || \
+               [[ "$dir" == ".github" ]]; then
+              echo "Skipping $dir"
+              continue
+            fi
+
+            # Check if directory has a package.json
+            if [ -f "$dir/package.json" ]; then
+              echo "========================================="
+              echo "Validating $dir"
+              echo "========================================="
+
+              cd "$dir"
+
+              # Check if build script exists and run it
+              if pnpm run --if-present build; then
+                echo "✓ Build passed for $dir"
+              else
+                echo "✗ Build failed for $dir"
+                exit 1
+              fi
+
+              # Check if test script exists and run it
+              if grep -q '"test"' package.json; then
+                if pnpm test; then
+                  echo "✓ Tests passed for $dir"
+                else
+                  echo "✗ Tests failed for $dir"
+                  exit 1
+                fi
+              else
+                echo "ℹ No test script found for $dir, skipping tests"
+              fi
+
+              cd ..
+            fi
+          done
+
+          echo ""
+          echo "========================================="
+          echo "✓ All projects validated successfully!"
+          echo "========================================="
