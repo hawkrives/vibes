@@ -222,7 +222,7 @@ Prevent path traversal attacks:
 .safe-template:
   script:
     - |
-      FILE_PATH="${[[ inputs.file_path ]]"
+      FILE_PATH="$[[ inputs.file_path ]]"
 
       # Ensure path is within expected directory
       REAL_PATH=$(realpath "$FILE_PATH")
@@ -387,17 +387,30 @@ Set appropriate expiration:
 
 ### Base Image Selection
 
-Choose secure base images:
+Choose secure base images with pinned versions:
 
 ```yaml
-# ✅ Official, minimal, specific version
-.secure-template:
-  image: node:20-alpine  # Minimal attack surface
+# ✅ Best: Pinned version with digest (immutable)
+.most-secure-template:
+  image: node:20-alpine@sha256:abc123...  # Cannot be changed
 
-# ⚠️ Less secure
+# ✅ Good: Official, minimal, specific version
+.secure-template:
+  image: node:20.11.0-alpine  # Specific version
+
+# ⚠️ Less secure: Mutable tag
 .less-secure-template:
+  image: node:20-alpine  # Tag can be updated
+
+# ❌ Least secure: Unknown source, latest tag
+.insecure-template:
   image: random-user/node:latest  # Unknown source, floating tag
 ```
+
+**Supply Chain Security:** Using digest-pinned images prevents:
+- Compromised registries from serving malicious images
+- Tag updates that introduce vulnerabilities
+- Supply chain attacks via image substitution
 
 ### Image Scanning
 

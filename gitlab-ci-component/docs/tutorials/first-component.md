@@ -51,7 +51,7 @@ spec:
   inputs:
     image:
       description: 'Docker image to use for scanning'
-      default: 'aquasec/trivy:latest'
+      default: 'aquasec/trivy:0.48.3'
     severity:
       description: 'Minimum severity level to report'
       default: 'MEDIUM'
@@ -102,9 +102,14 @@ security-check:
 
 | Name | Description | Default | Required |
 |------|-------------|---------|----------|
-| `image` | Docker image for scanning | `aquasec/trivy:latest` | No |
+| `image` | Docker image for scanning | `aquasec/trivy:0.48.3` | No |
 | `severity` | Minimum severity level | `MEDIUM` | No |
 | `target` | Target to scan | `.` | No |
+
+**Security Note:** For production use, pin the image to a specific digest for immutability:
+```yaml
+image: 'aquasec/trivy:0.48.3@sha256:abc123...'
+```
 
 ## Example
 
