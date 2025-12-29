@@ -33,7 +33,7 @@ package "my-app" version="1.0.0" {
 
 config {
     port 3000
-    debug true
+    debug #true
 }`;
 
 kdlInput.value = exampleKDL;
