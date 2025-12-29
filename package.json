@@ -2,15 +2,11 @@
   "name": "vibes",
   "version": "1.0.0",
   "description": "KDL REPL and related projects",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:all": "pnpm test && pnpm test:e2e"
+    "test:all": "pnpm --filter @vibes/kdl test && pnpm test:e2e"
   },
   "repository": {
     "type": "git",
@@ -27,8 +23,5 @@
     "serve": "^14.2.5",
     "vite": "^7.3.0",
     "vitest": "^4.0.16"
-  },
-  "dependencies": {
-    "@bgotink/kdl": "^0.4.0"
   }
 }
