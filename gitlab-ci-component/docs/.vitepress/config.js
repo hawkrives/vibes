@@ -4,6 +4,7 @@ export default defineConfig({
   title: 'GitLab CI/CD Components',
   description: 'Comprehensive documentation for GitLab CI/CD components',
   base: '/gitlab-ci-component/',
+  outDir: '../dist',
 
   themeConfig: {
     nav: [
