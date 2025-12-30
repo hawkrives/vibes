@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'GitLab CI/CD Components',
   description: 'Comprehensive documentation for GitLab CI/CD components',
-  base: '/gitlab-ci-component/',
+  base: '/vibes/gitlab-ci-component/',
   outDir: '../dist',
 
   themeConfig: {
